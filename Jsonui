@@ -1,0 +1,532 @@
+You'll learn advanced minecraft json ui, and I will give you an advanced example:
+
+(This is for understanding how server_form.json works.)
+{
+	"namespace": "server_form",
+	"$schema": "https://kalmemarq.github.io/Bugrock-JSON-UI-Schemas/ui.schema.json",
+
+	"long_form": {
+		"type": "panel",
+		"size": ["100%", "100%"],
+		"controls": [
+			{
+				"default_long_form@common_dialogs.main_panel_no_buttons": {
+					"$title_panel": "common_dialogs.standard_title_label",
+					"$title_size": ["100% - 14px", 10],
+					"size": [225, 200],
+					"$text_name": "#title_text",
+					"$title_text_binding_type": "none",
+					"$child_control": "server_form.long_form_panel",
+					"layer": 2,
+					"bindings": [
+						{
+							"binding_name": "#title_text"
+						},
+						{
+							"binding_type": "view",
+							"source_property_name": "((#title_text - 'Custom Form') = #title_text)",
+							"target_property_name": "#visible"
+						}
+					]
+				}
+			},
+			{
+				"cutsom_long_form@common_dialogs.main_panel_no_buttons": {
+					"$title_panel": "common_dialogs.standard_title_label",
+					"$title_size": ["100% - 14px", 10],
+					"size": [322.5, 185],
+					"$text_name": "#title_text",
+					"$title_text_binding_type": "none",
+					"$child_control": "server_form.my_super_custom_panel_main",
+					"layer": 2,
+					"bindings": [
+						{
+							"binding_name": "#title_text"
+						},
+						{
+							"binding_type": "view",
+							"source_property_name": "(#title_text = 'Custom Form')",
+							"target_property_name": "#visible"
+						}
+					]
+				}
+			}
+		]
+	},
+
+	"my_super_custom_panel_main": {
+		"type": "stack_panel",
+		"size": ["100%", "100%"],
+		"orientation": "horizontal",
+		"anchor_from": "center",
+		"anchor_to": "center",
+		"collection_name": "form_buttons",
+
+		"controls": [
+			{
+				"offset_button@server_form.custom_button": {
+					"$icon_size": [69, 69],
+					"$button_size": [133, 133],
+					"$padding": [153, 153],
+					"collection_index": 0
+				}
+			},
+			{
+				"right_side_stack": {
+					"type": "stack_panel",
+					"size": ["100%", "100%"],
+					"orientation": "vertical",
+					"anchor_from": "center",
+					"anchor_to": "center",
+					"collection_name": "form_buttons",
+					"controls": [
+						{
+							"offset_button@server_form.custom_button": {
+								"$button_size": [138, 55],
+								"$padding": [148, 76.5],
+								"collection_index": 1
+							}
+						},
+						{
+							"bottom_right_stack": {
+								"type": "stack_panel",
+								"size": ["100%", "100%"],
+								"orientation": "horizontal",
+								"anchor_from": "center",
+								"anchor_to": "center",
+								"collection_name": "form_buttons",
+								"controls": [
+									{
+										"offset_button@server_form.custom_button": {
+											"$button_size": [64, 64],
+											"$padding": [74, 69],
+											"collection_index": 2
+										}
+									},
+									{
+										"offset_button@server_form.custom_button": {
+											"$button_size": [64, 64],
+											"$padding": [74, 69],
+											"collection_index": 3
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+
+	"custom_button": {
+		"$padding|default": [80, 80],
+		"$button_size|default": [64, 64],
+		"$icon_size|default": [32, 32],
+		"type": "panel",
+		"size": "$padding",
+		"controls": [
+			{
+				"main_ui": {
+					"type": "panel",
+					"size": "$button_size",
+					"controls": [
+						{
+							"panel_name": {
+								"type": "panel",
+								"size": "$button_size",
+								"bindings": [
+									{
+										"binding_type": "view",
+										"source_control_name": "image",
+										"resolve_sibling_scope": true,
+										"source_property_name": "(not (#texture = ''))",
+										"target_property_name": "#visible"
+									}
+								],
+
+								"controls": [
+									{
+										"image": {
+											"type": "image",
+											"layer": 200,
+											"size": "$icon_size",
+											"offset": [0, -5],
+											"bindings": [
+												{
+													"binding_name": "#form_button_texture",
+													"binding_name_override": "#texture",
+													"binding_type": "collection",
+													"binding_collection_name": "form_buttons"
+												},
+												{
+													"binding_name": "#form_button_texture_file_system",
+													"binding_name_override": "#texture_file_system",
+													"binding_type": "collection",
+													"binding_collection_name": "form_buttons"
+												},
+												{
+													"binding_type": "view",
+													"source_property_name": "(not ((#texture = '') or (#texture = 'loading')))",
+													"target_property_name": "#visible"
+												}
+											]
+										}
+									},
+									{
+										"text": {
+											"type": "label",
+											"text": "#form_button_text",
+											"layer": 32,
+											"color": [0, 0, 0],
+											"offset": [0, -8],
+											"anchor_from": "bottom_middle",
+											"bindings": [
+												{
+													"binding_name": "#form_button_text",
+													"binding_type": "collection",
+													"binding_collection_name": "form_buttons"
+												}
+											]
+										}
+									}
+								]
+							}
+						},
+						{
+							"form_button@common_buttons.light_text_button": {
+								"$pressed_button_name": "button.form_button_click",
+								"anchor_from": "top_left",
+								"anchor_to": "top_left",
+								"size": "$button_size",
+								"$button_text": "#null",
+								"$button_text_binding_type": "collection",
+								"$button_text_grid_collection_name": "form_buttons",
+								"$button_text_max_size": ["100%", 20],
+								"bindings": [
+									{
+										"binding_type": "collection_details",
+										"binding_collection_name": "form_buttons"
+									}
+								]
+							}
+						}
+					]
+				}
+			}
+		]
+	}
+}
+
+{
+	"namespace": "server_form",
+
+	// 1. THE CONTENT: Using the Vanilla Button Template
+	"my_custom_content": {
+		"type": "stack_panel",
+		// This is required so the button knows where to look for data
+		"collection_name": "form_buttons",
+		"size": ["100%", "100%"],
+		"controls": [
+			{
+				// WE INHERIT FROM THE VANILLA BUTTON
+				// This automatically gives us the correct background textures and sounds.
+				"the_button@common_buttons.light_text_button": {
+					"size": ["100%", "100%"], // "Fill it up"
+					
+					// KEY FIX 1: Link to the first button in your script
+					"collection_index": 0,
+
+					// KEY FIX 2: Provide the variables this template requires
+					"$pressed_button_name": "button.form_button_click",
+					"$button_text": "#form_button_text",
+					
+					// These two lines prevent the "Must define a binding name" crash
+					"$button_text_binding_type": "collection",
+					"$button_text_grid_collection_name": "form_buttons",
+
+					"bindings": [
+						{
+							"binding_type": "collection_details",
+							"binding_collection_name": "form_buttons"
+						}
+					]
+				}
+			}
+		]
+	},
+
+	// 2. THE LOGIC (Unchanged)
+	"long_form": {
+		"type": "panel",
+		"size": ["100%", "100%"],
+		"controls": [
+			{
+				"default_form@common_dialogs.main_panel_no_buttons": {
+					"$title_panel": "common_dialogs.standard_title_label",
+					"size": [ 225, 200 ],
+					"$text_name": "#title_text",
+					"$child_control": "server_form.long_form_panel",
+					"bindings": [
+						{ "binding_name": "#title_text" },
+						{
+							"binding_type": "view",
+							"source_property_name": "((#title_text - '§l§eSingle Button') = #title_text)",
+							"target_property_name": "#visible"
+						}
+					]
+				}
+			},
+			{
+				"custom_form@common_dialogs.main_panel_no_buttons": {
+					"$title_panel": "common_dialogs.standard_title_label",
+					"size": [ 225, 200 ],
+					"$text_name": "#title_text",
+					"$child_control": "server_form.my_custom_content",
+					"bindings": [
+						{ "binding_name": "#title_text" },
+						{
+							"binding_type": "view",
+							"source_property_name": "(#title_text = '§l§eSingle Button')",
+							"target_property_name": "#visible"
+						}
+					]
+				}
+			}
+		]
+	}
+}
+
+{
+	"namespace": "server_form",
+
+	// 1. THE TEMPLATE
+	"my_textured_button": {
+		"type": "panel",
+		"controls": [
+			{
+				// LAYER 1: The Vanilla Button (Background ONLY)
+				"button_visuals@common_buttons.light_text_button": {
+					"size": ["100%", "100%"],
+					"anchor_from": "center",
+					"anchor_to": "center",
+					
+					// FIX 1: REMOVED all text variables ($button_text, etc.)
+					// We only keep the click logic. This stops the errors.
+					"$pressed_button_name": "button.form_button_click",
+					"bindings": [
+						{
+							"binding_type": "collection_details",
+							"binding_collection_name": "form_buttons"
+						}
+					]
+				}
+			},
+			{
+				// LAYER 20: The Content Stack (Icon + Text)
+				"centered_content": {
+					"type": "stack_panel",
+					"orientation": "vertical",
+					"size": ["100%", "100%c"], 
+					"anchor_from": "center",
+					"anchor_to": "center",
+					
+					// FIX 2: Layer 20 ensures it sits ON TOP of the hover highlight
+					"layer": 20, 
+					
+					"controls": [
+						{
+							// ICON WRAPPER
+							"icon_wrapper": {
+								"type": "panel",
+								"size": ["100%", 64],
+								"controls": [
+									{
+										"icon": {
+											"type": "image",
+											"size": [64, 64],
+											"anchor_from": "center",
+											"anchor_to": "center",
+											"bindings": [
+												{
+													"binding_name": "#form_button_texture",
+													"binding_name_override": "#texture",
+													"binding_type": "collection",
+													"binding_collection_name": "form_buttons"
+												},
+												{
+													"binding_type": "view",
+													"source_property_name": "(not ((#texture = '') or (#texture = 'loading')))",
+													"target_property_name": "#visible"
+												}
+											]
+										}
+									}
+								]
+							}
+						},
+						{
+							// GAP
+							"gap": {
+								"type": "panel",
+								"size": ["100%", 5]
+							}
+						},
+						{
+							// TEXT LABEL
+							"text": {
+								"type": "label",
+								"text": "#form_button_text",
+								"size": ["100%", "default"],
+								"text_alignment": "center",
+								"font_scale_factor": 1.5,
+								"color": [1.0, 1.0, 1.0],
+								// Shadow helps it pop out from the background
+								"shadow": true, 
+								"bindings": [
+									{
+										"binding_name": "#form_button_text",
+										"binding_type": "collection",
+										"binding_collection_name": "form_buttons"
+									}
+								]
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+
+	// 2. THE CONTENT
+	"two_buttons_content": {
+		"type": "panel",
+		"size": ["100%", "100%"],
+		
+		"controls": [
+			{
+				// LEFT WRAPPER
+				"left_wrapper": {
+					"type": "stack_panel",
+					"collection_name": "form_buttons",
+					"size": [90, "95%"], 
+					"anchor_from": "left_middle",
+					"anchor_to": "left_middle",
+					"offset": [20, 0],
+					"controls": [
+						{
+							"left_button@server_form.my_textured_button": {
+								"size": ["100%", "100%"],
+								"collection_index": 0
+							}
+						}
+					]
+				}
+			},
+			{
+				// RIGHT WRAPPER
+				"right_wrapper": {
+					"type": "stack_panel",
+					"collection_name": "form_buttons",
+					"size": [150, 150], 
+					"anchor_from": "right_middle",
+					"anchor_to": "right_middle",
+					"offset": [-20, 0],
+					"controls": [
+						{
+							"right_button@server_form.my_textured_button": {
+								"size": ["100%", "100%"],
+								"collection_index": 1
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+
+	// 3. THE LOGIC
+	"long_form": {
+		"type": "panel",
+		"size": ["100%", "100%"],
+		"controls": [
+			{
+				"default_form@common_dialogs.main_panel_no_buttons": {
+					"$title_panel": "common_dialogs.standard_title_label",
+					"size": [ 225, 200 ],
+					"$text_name": "#title_text",
+					"$child_control": "server_form.long_form_panel",
+					"bindings": [
+						{ "binding_name": "#title_text" },
+						{
+							"binding_type": "view",
+							"source_property_name": "((#title_text - '§l§eTwo Buttons') = #title_text)",
+							"target_property_name": "#visible"
+						}
+					]
+				}
+			},
+			{
+				"custom_form@common_dialogs.main_panel_no_buttons": {
+					"$title_panel": "common_dialogs.standard_title_label",
+					"size": [ 350, 225 ],
+					"$text_name": "#title_text",
+					"$child_control": "server_form.two_buttons_content",
+					"bindings": [
+						{ "binding_name": "#title_text" },
+						{
+							"binding_type": "view",
+							"source_property_name": "(#title_text = '§l§eTwo Buttons')",
+							"target_property_name": "#visible"
+						}
+					]
+				}
+			}
+		]
+	}
+}
+
+(This script I provided is for better understanding of Json UI. You actullay have to create new ones.)
+
+
+And you'll use these websites for Json UI resources, https://wiki.bedrock.dev/json-ui/json-ui-intro.html. and https://wiki.bedrock.dev/json-ui/json-ui-documentation.html (These are for understanding.)
+
+(This is what we need to do)
+Also since I am using server_form.json you have to use this too
+https://wiki.bedrock.dev/json-ui/json-ui-documentation.html#server-form-ui-server-form-json
+
+https://raw.githubusercontent.com/ZtechNetwork/MCBVanillaResourcePack/refs/heads/master/ui/server_form.json
+It has everything you need for making the server_form.json youll make today.
+
+Read:
+https://wiki.bedrock.dev/json-ui/json-ui-documentation.html#ui-elements
+https://wiki.bedrock.dev/json-ui/json-ui-documentation.html#propertieshttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#controlhttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#layout
+https://wiki.bedrock.dev/json-ui/json-ui-documentation.html#data-bindinghttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#data-binding-array-objecthttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#stack-panelhttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#gridhttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#texthttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#spritehttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#inputhttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#focushttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#focus-container-custom-array-objecthttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#button-mapping-array-objecthttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#buttonhttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#togglehttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#hardcoded-toggleshttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#dropdownhttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#soundhttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#sound-array-objecthttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#collectionhttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#text-edithttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#slider
+https://wiki.bedrock.dev/json-ui/json-ui-documentation.html#slider-boxhttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#scroll-viewhttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#custom-renderhttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#renderershttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#specific-propertieshttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#screenhttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#selection-wheelhttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#ttshttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#properties-additional-informationhttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#anchor-propertieshttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#variables-propertyhttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#property-baghttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#animationshttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#global-variableshttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#hardcoded-button-idshttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#hardcoded-collection-nameshttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#server-form-ui-server-form-jsonhttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#hardcoded-binding-nameshttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#settingshttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#slidershttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#toggleshttps://wiki.bedrock.dev/json-ui/json-ui-documentation.html#item-id-aux-item-id-aux
+https://wiki.bedrock.dev/json-ui/json-ui-documentation.html
+https://raw.githubusercontent.com/ZtechNetwork/MCBVanillaResourcePack/refs/heads/master/ui/server_form.json
+For better understanding.
+
+Script to make the server form/json ui work
+import { world } from "@minecraft/server";
+import { ActionFormData } from "@minecraft/server-ui";
+
+world.afterEvents.itemUse.subscribe((event) => {
+    const { source: player, itemStack } = event;
+
+    if (itemStack.typeId === "minecraft:nether_star") {
+        
+        const singleButtonForm = new ActionFormData()
+            .title("§l§eSingle Button")
+            .button("§lConfirm"); // We only add one button.
+
+        singleButtonForm.show(player).then(result => {
+            if (result.canceled) {
+                player.sendMessage("§cForm Canceled.");
+            } else {
+                // The selection will always be 0 since there's only one button.
+                player.sendMessage("§aYou pressed the only button!");
+            }
+        });
+    }
+});
